@@ -78,6 +78,9 @@ export default function Dashboard({ initialSubscriptions, currency }: Props) {
         billingCycle: values.billingCycle,
         nextRenewalDate: values.nextRenewalDate,
         notes: values.notes || null,
+        subscriberName: values.subscriberName || null,
+        subscriberEmail: values.subscriberEmail || null,
+        subscriberDivision: values.subscriberDivision || null,
       }),
     });
     if (!res.ok) {
@@ -99,6 +102,9 @@ export default function Dashboard({ initialSubscriptions, currency }: Props) {
         billingCycle: values.billingCycle,
         nextRenewalDate: values.nextRenewalDate,
         notes: values.notes || null,
+        subscriberName: values.subscriberName || null,
+        subscriberEmail: values.subscriberEmail || null,
+        subscriberDivision: values.subscriberDivision || null,
       }),
     });
     if (!res.ok) {
@@ -306,6 +312,16 @@ export default function Dashboard({ initialSubscriptions, currency }: Props) {
                           {formatCost(sub.monthlyCost)} / mo ·{" "}
                           <span className="capitalize">{sub.billingCycle}</span>
                         </p>
+                        {(sub.subscriberName || sub.subscriberDivision) && (
+                          <p className="mt-1 text-xs text-zinc-500">
+                            {sub.subscriberName}
+                            {sub.subscriberName && sub.subscriberDivision && " · "}
+                            {sub.subscriberDivision}
+                          </p>
+                        )}
+                        {sub.subscriberEmail && (
+                          <p className="text-xs text-zinc-400">{sub.subscriberEmail}</p>
+                        )}
                         {sub.notes && (
                           <p className="mt-1 text-xs text-zinc-400">{sub.notes}</p>
                         )}

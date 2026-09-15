@@ -13,6 +13,15 @@ export const createSubscriptionSchema = z.object({
   billingCycle: billingCycleSchema,
   nextRenewalDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD"),
   notes: z.string().trim().max(500).optional().nullable(),
+  subscriberName: z.string().trim().max(120).optional().nullable(),
+  subscriberEmail: z
+    .string()
+    .trim()
+    .max(200)
+    .email("Enter a valid subscriber email")
+    .optional()
+    .nullable(),
+  subscriberDivision: z.string().trim().max(120).optional().nullable(),
 });
 
 export const updateSubscriptionSchema = z.object({
@@ -24,5 +33,14 @@ export const updateSubscriptionSchema = z.object({
     .regex(/^\d{4}-\d{2}-\d{2}$/, "Use YYYY-MM-DD")
     .optional(),
   notes: z.string().trim().max(500).optional().nullable(),
+  subscriberName: z.string().trim().max(120).optional().nullable(),
+  subscriberEmail: z
+    .string()
+    .trim()
+    .max(200)
+    .email("Enter a valid subscriber email")
+    .optional()
+    .nullable(),
+  subscriberDivision: z.string().trim().max(120).optional().nullable(),
   status: z.enum(["active", "cancelled"]).optional(),
 });

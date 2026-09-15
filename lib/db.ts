@@ -21,7 +21,9 @@ let schemaReady: Promise<void> | undefined;
 
 export function ensureSchema(): Promise<void> {
   if (!schemaReady) {
-    schemaReady = pool.query(`
+    schemaReady = pool
+      .query(
+        `
       CREATE TABLE IF NOT EXISTS subscriptions (
         id TEXT PRIMARY KEY,
         name TEXT NOT NULL,
@@ -34,7 +36,17 @@ export function ensureSchema(): Promise<void> {
         created_at TEXT NOT NULL,
         updated_at TEXT NOT NULL
       )
-    `).then(() => undefined);
+    `
+      )
+      .then(() =>
+        pool.query(`
+      ALTER TABLE subscriptions
+        ADD COLUMN IF NOT EXISTS subscriber_name TEXT,
+        ADD COLUMN IF NOT EXISTS subscriber_email TEXT,
+        ADD COLUMN IF NOT EXISTS subscriber_division TEXT
+    `)
+      )
+      .then(() => undefined);
   }
   return schemaReady;
 }

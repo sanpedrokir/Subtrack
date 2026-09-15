@@ -17,6 +17,9 @@ export async function GET() {
     "Billing Cycle",
     "Next Renewal",
     "Status",
+    "Subscriber",
+    "Subscriber Email",
+    "Division",
     "Notes",
     "Added On",
   ];
@@ -28,6 +31,9 @@ export async function GET() {
       sub.billingCycle,
       sub.nextRenewalDate,
       sub.status,
+      sub.subscriberName ?? "",
+      sub.subscriberEmail ?? "",
+      sub.subscriberDivision ?? "",
       sub.notes ?? "",
       sub.createdAt.slice(0, 10),
     ]

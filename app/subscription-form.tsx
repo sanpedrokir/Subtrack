@@ -9,6 +9,9 @@ export interface SubscriptionFormValues {
   billingCycle: BillingCycle;
   nextRenewalDate: string;
   notes: string;
+  subscriberName: string;
+  subscriberEmail: string;
+  subscriberDivision: string;
 }
 
 const BILLING_CYCLES: { value: BillingCycle; label: string }[] = [
@@ -29,6 +32,9 @@ export function emptyFormValues(): SubscriptionFormValues {
     billingCycle: "monthly",
     nextRenewalDate: todayIso(),
     notes: "",
+    subscriberName: "",
+    subscriberEmail: "",
+    subscriberDivision: "",
   };
 }
 
@@ -39,6 +45,9 @@ export function subscriptionToFormValues(sub: Subscription): SubscriptionFormVal
     billingCycle: sub.billingCycle,
     nextRenewalDate: sub.nextRenewalDate,
     notes: sub.notes ?? "",
+    subscriberName: sub.subscriberName ?? "",
+    subscriberEmail: sub.subscriberEmail ?? "",
+    subscriberDivision: sub.subscriberDivision ?? "",
   };
 }
 
@@ -152,6 +161,56 @@ export default function SubscriptionForm({
             <p className="mt-1 text-xs text-zinc-500">
               You&apos;ll get an email reminder when this is within 1 month away.
             </p>
+          </div>
+
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                Subscriber name
+              </label>
+              <input
+                type="text"
+                required
+                value={values.subscriberName}
+                onChange={(e) =>
+                  setValues({ ...values, subscriberName: e.target.value })
+                }
+                placeholder="e.g. Shannen"
+                className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+                Division
+              </label>
+              <input
+                type="text"
+                required
+                value={values.subscriberDivision}
+                onChange={(e) =>
+                  setValues({ ...values, subscriberDivision: e.target.value })
+                }
+                placeholder="e.g. Engineering"
+                className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300">
+              Subscriber email
+            </label>
+            <input
+              type="email"
+              required
+              value={values.subscriberEmail}
+              onChange={(e) =>
+                setValues({ ...values, subscriberEmail: e.target.value })
+              }
+              placeholder="e.g. shannen@company.com"
+              className="mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2 text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-100"
+            />
           </div>
 
           <div>

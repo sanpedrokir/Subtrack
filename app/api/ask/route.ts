@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       messages: [
         {
           role: "system",
-          content: `You answer questions about the user's software subscriptions using ONLY the data provided below. Be concise — a sentence or two, or a short list. Costs are in ${currency}, expressed as a monthly figure per subscription (monthlyCost). If a billing cycle isn't "monthly", monthlyCost is still the equivalent per-month amount. If the data doesn't answer the question, say so rather than guessing.
+          content: `You answer questions about the user's software subscriptions using ONLY the data provided below. Each row is one person's subscription to one service — subscriberName/subscriberEmail/subscriberDivision identify who it's for (may be null for older entries). To count "how many people are subscribed to X", count the rows where name matches X. Be concise — a sentence or two, or a short list. Costs are in ${currency}, expressed as a monthly figure per subscription (monthlyCost). If a billing cycle isn't "monthly", monthlyCost is still the equivalent per-month amount. If the data doesn't answer the question, say so rather than guessing.
 
 Subscriptions data (JSON):
 ${JSON.stringify(subscriptions, null, 2)}`,

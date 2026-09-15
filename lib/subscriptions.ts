@@ -12,6 +12,9 @@ export interface Subscription {
   nextRenewalDate: string; // ISO date, YYYY-MM-DD
   status: SubscriptionStatus;
   notes: string | null;
+  subscriberName: string | null;
+  subscriberEmail: string | null;
+  subscriberDivision: string | null;
   reminderSentForDate: string | null;
   createdAt: string;
   updatedAt: string;
@@ -25,6 +28,9 @@ interface SubscriptionRow {
   next_renewal_date: string;
   status: string;
   notes: string | null;
+  subscriber_name: string | null;
+  subscriber_email: string | null;
+  subscriber_division: string | null;
   reminder_sent_for_date: string | null;
   created_at: string;
   updated_at: string;
@@ -39,6 +45,9 @@ function rowToSubscription(row: SubscriptionRow): Subscription {
     nextRenewalDate: row.next_renewal_date,
     status: row.status as SubscriptionStatus,
     notes: row.notes,
+    subscriberName: row.subscriber_name,
+    subscriberEmail: row.subscriber_email,
+    subscriberDivision: row.subscriber_division,
     reminderSentForDate: row.reminder_sent_for_date,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -51,6 +60,9 @@ export interface CreateSubscriptionInput {
   billingCycle: BillingCycle;
   nextRenewalDate: string;
   notes?: string | null;
+  subscriberName?: string | null;
+  subscriberEmail?: string | null;
+  subscriberDivision?: string | null;
 }
 
 export interface UpdateSubscriptionInput {
@@ -59,6 +71,9 @@ export interface UpdateSubscriptionInput {
   billingCycle?: BillingCycle;
   nextRenewalDate?: string;
   notes?: string | null;
+  subscriberName?: string | null;
+  subscriberEmail?: string | null;
+  subscriberDivision?: string | null;
   status?: SubscriptionStatus;
 }
 
@@ -90,8 +105,8 @@ export async function createSubscription(
 
   await pool.query(
     `INSERT INTO subscriptions
-      (id, name, monthly_cost, billing_cycle, next_renewal_date, status, notes, reminder_sent_for_date, created_at, updated_at)
-     VALUES ($1, $2, $3, $4, $5, 'active', $6, NULL, $7, $7)`,
+      (id, name, monthly_cost, billing_cycle, next_renewal_date, status, notes, subscriber_name, subscriber_email, subscriber_division, reminder_sent_for_date, created_at, updated_at)
+     VALUES ($1, $2, $3, $4, $5, 'active', $6, $7, $8, $9, NULL, $10, $10)`,
     [
       id,
       input.name,
@@ -99,6 +114,9 @@ export async function createSubscription(
       input.billingCycle,
       input.nextRenewalDate,
       input.notes ?? null,
+      input.subscriberName ?? null,
+      input.subscriberEmail ?? null,
+      input.subscriberDivision ?? null,
       now,
     ]
   );
@@ -119,6 +137,18 @@ export async function updateSubscription(
     billingCycle: input.billingCycle ?? existing.billingCycle,
     nextRenewalDate: input.nextRenewalDate ?? existing.nextRenewalDate,
     notes: input.notes === undefined ? existing.notes : input.notes,
+    subscriberName:
+      input.subscriberName === undefined
+        ? existing.subscriberName
+        : input.subscriberName,
+    subscriberEmail:
+      input.subscriberEmail === undefined
+        ? existing.subscriberEmail
+        : input.subscriberEmail,
+    subscriberDivision:
+      input.subscriberDivision === undefined
+        ? existing.subscriberDivision
+        : input.subscriberDivision,
     status: input.status ?? existing.status,
   };
 
@@ -133,14 +163,17 @@ export async function updateSubscription(
 
   await pool.query(
     `UPDATE subscriptions
-     SET name = $1, monthly_cost = $2, billing_cycle = $3, next_renewal_date = $4, notes = $5, status = $6, reminder_sent_for_date = $7, updated_at = $8
-     WHERE id = $9`,
+     SET name = $1, monthly_cost = $2, billing_cycle = $3, next_renewal_date = $4, notes = $5, subscriber_name = $6, subscriber_email = $7, subscriber_division = $8, status = $9, reminder_sent_for_date = $10, updated_at = $11
+     WHERE id = $12`,
     [
       next.name,
       next.monthlyCost,
       next.billingCycle,
       next.nextRenewalDate,
       next.notes,
+      next.subscriberName,
+      next.subscriberEmail,
+      next.subscriberDivision,
       next.status,
       reminderSentForDate,
       now,

@@ -49,6 +49,9 @@ export default async function ReportPage() {
                 <th className="px-4 py-3">Billing cycle</th>
                 <th className="px-4 py-3">Next renewal</th>
                 <th className="px-4 py-3">Status</th>
+                <th className="px-4 py-3">Subscriber</th>
+                <th className="px-4 py-3">Email</th>
+                <th className="px-4 py-3">Division</th>
                 <th className="px-4 py-3">Notes</th>
                 <th className="px-4 py-3">Added on</th>
               </tr>
@@ -71,6 +74,9 @@ export default async function ReportPage() {
                       {sub.status}
                     </span>
                   </td>
+                  <td className="px-4 py-3 text-zinc-700">{sub.subscriberName ?? ""}</td>
+                  <td className="px-4 py-3 text-zinc-500">{sub.subscriberEmail ?? ""}</td>
+                  <td className="px-4 py-3 text-zinc-700">{sub.subscriberDivision ?? ""}</td>
                   <td className="px-4 py-3 text-zinc-500">{sub.notes ?? ""}</td>
                   <td className="px-4 py-3 text-zinc-500">
                     {sub.createdAt.slice(0, 10)}
@@ -79,7 +85,7 @@ export default async function ReportPage() {
               ))}
               {subscriptions.length === 0 && (
                 <tr>
-                  <td colSpan={7} className="px-4 py-8 text-center text-zinc-400">
+                  <td colSpan={10} className="px-4 py-8 text-center text-zinc-400">
                     No subscriptions entered yet.
                   </td>
                 </tr>
