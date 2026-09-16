@@ -44,7 +44,10 @@ export default function Dashboard({ initialSubscriptions, currency }: Props) {
   const [checkMessage, setCheckMessage] = useState<string | null>(null);
   const [question, setQuestion] = useState("");
   const [asking, setAsking] = useState(false);
-  const [answer, setAnswer] = useState<string | null>(null);
+  const [answer, setAnswer] = useState<{
+    answer: string;
+    table: { columns: string[]; rows: string[][] } | null;
+  } | null>(null);
   const [askError, setAskError] = useState<string | null>(null);
 
   const formatCost = useMemo(() => {
@@ -150,7 +153,7 @@ export default function Dashboard({ initialSubscriptions, currency }: Props) {
       if (!res.ok) {
         setAskError(body.error ?? "Failed to get an answer");
       } else {
-        setAnswer(body.answer);
+        setAnswer({ answer: body.answer, table: body.table ?? null });
       }
     } catch {
       setAskError("Failed to get an answer — see server console.");
@@ -280,9 +283,40 @@ export default function Dashboard({ initialSubscriptions, currency }: Props) {
             <p className="mt-2 text-sm text-red-600 dark:text-red-400">{askError}</p>
           )}
           {answer && (
-            <p className="mt-3 whitespace-pre-wrap rounded-lg bg-zinc-50 p-3 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200">
-              {answer}
-            </p>
+            <div className="mt-3 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-800">
+              <p className="whitespace-pre-wrap text-sm text-zinc-700 dark:text-zinc-200">
+                {answer.answer}
+              </p>
+              {answer.table && answer.table.rows.length > 0 && (
+                <div className="mt-3 overflow-x-auto rounded-lg border border-zinc-200 dark:border-zinc-700">
+                  <table className="w-full min-w-[480px] border-collapse text-sm">
+                    <thead>
+                      <tr className="border-b border-zinc-200 bg-white text-left text-xs font-medium uppercase tracking-wide text-zinc-500 dark:border-zinc-700 dark:bg-zinc-900">
+                        {answer.table.columns.map((col, i) => (
+                          <th key={i} className="px-3 py-2">
+                            {col}
+                          </th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {answer.table.rows.map((row, i) => (
+                        <tr
+                          key={i}
+                          className="border-b border-zinc-100 bg-white last:border-0 dark:border-zinc-800 dark:bg-zinc-900"
+                        >
+                          {row.map((cell, j) => (
+                            <td key={j} className="px-3 py-2 text-zinc-700 dark:text-zinc-200">
+                              {cell}
+                            </td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              )}
+            </div>
           )}
         </div>
 
